@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173b66">
+  <meta name="description" content="Web luyện Reading 51 câu theo file gốc, có ảnh thông báo, giữ thứ tự câu và chỉ đảo lựa chọn A/B/C.">
+  <title>Reading Practice • 51 câu</title>
+  <style>
+    :root{--ink:#182943;--sub:#65768f;--blue:#245b91;--navy:#173b66;--pale:#f2f6fb;--line:#dbe5f1;--white:#fff;--ok:#137c5e;--bad:#bd4252;--ring:#86b9ef}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--pale);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+    button{font:inherit;cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
+    .topbar{background:linear-gradient(112deg,#142e50 0%,#245b91 100%);color:white}
+    .topinner{max-width:1250px;margin:auto;padding:30px 25px 32px;display:flex;gap:24px;justify-content:space-between;align-items:center}
+    .eyebrow{margin:0 0 7px;color:#a5cbea;font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:800}
+    h1{font-size:clamp(27px,4vw,39px);line-height:1.15;letter-spacing:-.03em;margin:0 0 10px;font-weight:800}
+    .intro{margin:0;color:#d6e6f6;max-width:680px;font-size:14px}
+    .header-chip{flex:none;border:1px solid #7298bc;background:#ffffff14;border-radius:16px;padding:12px 17px;text-align:center;min-width:136px}
+    .header-chip strong{font-size:26px;display:block;line-height:1.25}.header-chip span{font-size:12px;color:#d7e8f6}
+    .shell{max-width:1250px;margin:0 auto;padding:22px 24px 52px;display:grid;grid-template-columns:252px minmax(0,1fr);gap:22px;align-items:start}
+    .aside{position:sticky;top:16px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 7px 26px #173b660a}
+    .aside-head{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--sub);font-weight:800;margin:2px 0 13px}
+    .partnav{display:grid;gap:7px}
+    .partbtn{width:100%;text-align:left;padding:12px;border-radius:12px;border:1px solid transparent;background:transparent;display:flex;gap:9px;align-items:center;justify-content:space-between;color:var(--ink)}
+    .partbtn:hover{background:#f4f8fd}.partbtn.active{background:#edf5ff;border-color:#aac9eb;color:#1d5489}
+    .parttitle{display:block;font-weight:750;font-size:14px;line-height:1.2}.partrange{font-size:12px;color:var(--sub)}
+    .mini{font-size:12px;color:var(--sub);white-space:nowrap}.partbtn.active .mini{color:#245b91}
+    .aside-foot{border-top:1px solid var(--line);margin-top:16px;padding-top:15px}
+    .overall{display:flex;justify-content:space-between;font-weight:700;font-size:13px;margin-bottom:7px}
+    .progress{height:7px;background:#e4ecf5;border-radius:99px;overflow:hidden}.progress>span{display:block;background:#3c8cc0;width:0;height:100%;transition:width .25s ease}
+    .helper{color:var(--sub);font-size:12px;margin:11px 0 0}
+    .content{min-width:0}
+    .sectionhead{background:white;border:1px solid var(--line);border-radius:18px;padding:21px 23px;margin-bottom:16px}
+    .sectionhead h2{font-size:22px;letter-spacing:-.02em;margin:0 0 6px}.sectionhead p{color:var(--sub);font-size:13px;margin:0}
+    .notice{display:flex;gap:9px;align-items:flex-start;color:#566c85;background:#eef5fc;padding:12px 14px;border-radius:10px;margin-top:14px;font-size:13px}
+    .live{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:15px 0 0}.live-number{font-weight:750;font-size:13px;color:var(--navy)}
+    .questions{display:grid;gap:14px}
+    .question{border:1px solid var(--line);border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 4px 18px #173b6605;scroll-margin-top:10px}
+    .qhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 19px;border-bottom:1px solid #e6edf5}
+    .qname{font-size:14px;font-weight:800}.qstatus{font-size:12px;color:var(--sub)}
+    .qinner{padding:18px 19px;display:grid;grid-template-columns:minmax(230px,.89fr) minmax(0,1.11fr);gap:23px;align-items:start}
+    .picture{margin:0;min-width:0}.picbtn{display:block;width:100%;padding:10px;background:#f6f8fb;border:1px solid #e1e8f0;border-radius:12px;transition:border-color .2s}
+    .picbtn:hover{border-color:#7ba9d5}.picbtn img{display:block;margin:auto;max-height:290px;width:100%;object-fit:contain}
+    .picture figcaption{font-size:11px;color:#6c7c92;margin:6px 4px 0;text-align:center}
+    .qprompt{font-size:13px;color:#51677c;margin:0 0 10px;font-weight:700}
+    .options{display:grid;gap:9px}
+    .option{display:flex;align-items:flex-start;gap:11px;border:1.5px solid #dde5ed;border-radius:12px;padding:11px 12px;cursor:pointer;min-height:51px;transition:background .15s,border-color .15s}
+    .option:hover{background:#f8fafd;border-color:#b9cfe7}.option.selected{border-color:#3778b4;background:#eff6ff}
+    .option input{position:absolute;width:1px;height:1px;opacity:0}
+    .letter{flex:0 0 27px;height:27px;display:grid;place-items:center;border-radius:8px;background:#eaf0f8;font-weight:750;font-size:13px;color:#375475}
+    .option.selected .letter{color:white;background:#2871ae}.opttext{line-height:1.48;font-size:14px;min-width:0;overflow-wrap:anywhere}
+    .option.right{border-color:#67b69f;background:#edf9f5}.option.right .letter{background:#137c5e;color:white}
+    .option.wrong{border-color:#e7a4af;background:#fff0f2}.option.wrong .letter{background:#b84251;color:white}
+    .option.locked{cursor:default}.option.locked:hover{border-color:#dde5ed}
+    .option.locked.right:hover{border-color:#67b69f}.option.locked.wrong:hover{border-color:#e7a4af}
+    .feedback{border-radius:10px;padding:8px 11px;font-size:13px;margin-top:10px;background:#eef6fc;color:#2d587c}
+    .feedback.ok{background:#e7f6ee;color:#146c4f}.feedback.bad{background:#fff0f1;color:#aa3444}
+    .footactions{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-top:17px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .actiongroup{display:flex;gap:9px;flex-wrap:wrap}
+    .btn{padding:10px 17px;font-size:13px;border-radius:10px;font-weight:800;border:1px solid transparent;min-height:42px}
+    .btn.primary{background:var(--navy);color:white}.btn.primary:hover{background:#235787}
+    .btn.secondary{background:#fff;color:var(--navy);border-color:#cedbe9}.btn.secondary:hover{background:#f0f5fa}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .result{display:none;border:1px solid #afd9c4;background:#ecf8f2;border-radius:14px;padding:15px 18px;margin:16px 0;color:#205b48}
+    .result.visible{display:block}.result b{font-size:22px}.result p{margin:3px 0 0;font-size:13px}
+    dialog{border:0;border-radius:15px;padding:14px;max-width:min(96vw,980px);max-height:94vh;box-shadow:0 20px 60px #001d3d77}
+    dialog::backdrop{background:#06172aca}.lightbox img{display:block;max-width:min(88vw,900px);max-height:79vh;object-fit:contain;margin:auto}
+    .dialogbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:2px 3px 12px}
+    .dialogbar strong{font-size:14px}.close{border:1px solid #ccd8e7;background:white;padding:5px 13px;border-radius:9px}
+    @media(max-width:950px){.shell{grid-template-columns:1fr;gap:15px}.aside{position:static}.partnav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.partbtn{display:block;text-align:center;padding:9px 4px}.mini{display:block}.partrange{display:none}.aside-head{margin-bottom:9px}.aside-foot{margin-top:12px}}
+    @media(max-width:680px){.topinner{padding:23px 16px 25px}.header-chip{display:none}.shell{padding:13px 12px 35px}.partnav{grid-template-columns:repeat(5,minmax(0,1fr))}.partbtn{padding:9px 1px}.parttitle{font-size:12px}.mini{font-size:11px}.aside{padding:13px}.sectionhead{padding:16px}.sectionhead h2{font-size:20px}.question{border-radius:14px}.qhead{padding:10px 13px}.qinner{grid-template-columns:1fr;gap:12px;padding:13px}.picbtn img{max-height:350px}.option{padding:10px}.footactions{padding:13px}.footactions .actiongroup{width:100%}.footactions .btn{flex:1}.next{width:100%}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  </style>
+</head>
+<body>
+<header class="topbar"><div class="topinner">
+  <div><p class="eyebrow">English Reading • Luyện tập</p><h1>Reading Practice — 51 câu</h1>
+    <p class="intro">5 phần • Đọc thông báo trong ảnh và chọn đáp án phù hợp. Thứ tự câu hỏi giữ nguyên, chỉ xáo trộn vị trí A/B/C trong từng câu.</p></div>
+  <div class="header-chip"><strong>51</strong><span>Câu hỏi có ảnh</span></div>
+</div></header>
+<div class="shell">
+  <aside class="aside" aria-label="Điều hướng các phần">
+    <div class="aside-head">Chọn phần luyện tập</div>
+    <nav class="partnav" id="part-nav"></nav>
+    <div class="aside-foot"><div class="overall"><span>Tiến độ toàn bộ</span><span id="overall-text">0/51</span></div>
+      <div class="progress"><span id="overall-progress"></span></div><p class="helper">Kết quả được lưu trên trình duyệt này. Mỗi phần chấm điểm riêng.</p>
+    </div>
+  </aside>
+  <main class="content" id="main">
+    <div class="sectionhead"><h2 id="section-title">Phần 1 • Câu 1–10</h2>
+      <p id="section-intro">Đọc kỹ thông báo và chọn một phương án trả lời.</p>
+      <div class="notice"><span aria-hidden="true">ⓘ</span><span>Đáp án chấm được giữ theo file HTML bạn cung cấp; web không tự sửa đáp án hay nội dung câu hỏi.</span></div>
+      <div class="live"><span id="live-count" class="live-number">Đã làm 0/10 câu</span><div class="progress" style="width:160px;max-width:100%"><span id="part-progress"></span></div></div>
+    </div>
+    <div id="questions" class="questions"></div>
+    <div id="result" class="result" role="status" aria-live="polite"></div>
+    <div class="footactions"><div class="actiongroup"><button id="grade" class="btn primary" type="button">Chấm điểm phần này</button>
+      <button id="reset" class="btn secondary" type="button">Làm lại (đảo đáp án)</button></div>
+      <button id="next" class="btn secondary next" type="button">Phần tiếp theo →</button></div>
+  </main>
+</div>
+<dialog class="lightbox" id="lightbox" aria-label="Xem ảnh đề phóng to"><div class="dialogbar"><strong id="lightbox-name"></strong><button class="close" id="close-photo" type="button">Đóng ✕</button></div><img id="lightbox-photo" alt="Ảnh đề phóng to"></dialog>
+<script>
+const QUESTIONS = [{"id":1,"image":"assets/q01.jpg","alt":"Original notice or sign for question 1","options":["Training will begin half an hour earlier than usual.","Training will begin half an hour later than usual.","Training will begin at the usual time."],"correct":0},{"id":2,"image":"assets/q02.jpg","alt":"Original notice or sign for question 2","options":["To tell Minh their guard duty will now start two hours later.","To tell Minh his guard duty has been cancelled.","To tell Minh to start guard duty two hours earlier."],"correct":0},{"id":3,"image":"assets/q03.jpg","alt":"Original notice or sign for question 3","options":["Enter when the red flag is up.","Collect targets while the red flag is flying.","Stay out while the red flag is up."],"correct":2},{"id":4,"image":"assets/q04.jpg","alt":"Original notice or sign for question 4","options":["Tell the store which items they are missing.","Ask the store to inspect all equipment on Friday.","Return all equipment to the store by Friday."],"correct":0},{"id":5,"image":"assets/q05.jpg","alt":"Original notice or sign for question 5","options":["Damage only needs to be reported after the exercise.","Users should repair all damage themselves.","Damage must be reported, not repaired by the user."],"correct":2},{"id":6,"image":"assets/q06.jpg","alt":"Original notice or sign for question 6","options":["It will be held indoors, but at the usual time.","It will be held indoors one hour later.","It will be held outdoors at the usual time."],"correct":0},{"id":7,"image":"assets/q07.jpg","alt":"Original notice or sign for question 7","options":["Use water on the weapon's working parts.","Check the weapon is empty before cleaning it.","Clean the weapon before checking whether it is empty."],"correct":1},{"id":8,"image":"assets/q08.jpg","alt":"Original notice or sign for question 8","options":["Write your name down before taking ammunition.","Take ammunition first and sign the register later.","Ammunition can be taken without signing."],"correct":0},{"id":9,"image":"assets/q09.jpg","alt":"Original notice or sign for question 9","options":["Breakfast is served for one hour only.","Breakfast is served for two hours.","Breakfast is served only after 0700."],"correct":0},{"id":10,"image":"assets/q10.jpg","alt":"Original notice or sign for question 10","options":["They will be returned the following day.","They will be ready on the same day.","They will be returned after one week."],"correct":0},{"id":11,"image":"assets/q11.jpg","alt":"Original notice or sign for question 11","options":["Check the tyres only after driving.","Check the radio and antenna.","Check the oil and fuel levels."],"correct":2},{"id":12,"image":"assets/q12.jpg","alt":"Original notice or sign for question 12","options":["Tell the store officer.","Report directly to the medical centre first.","Tell your section commander."],"correct":2},{"id":13,"image":"assets/q13.jpg","alt":"Original notice or sign for question 13","options":["A map and a mobile phone.","A compass and a camera.","A compass and a torch."],"correct":2},{"id":14,"image":"assets/q14.jpg","alt":"Original notice or sign for question 14","options":["Quiet hours begin at 2000.","Be quiet from 2200 onwards.","Keep noise to a minimum only after 2230."],"correct":1},{"id":15,"image":"assets/q15.jpg","alt":"Original notice or sign for question 15","options":["Borrowing books.","Showing an ID card.","Taking photographs."],"correct":2},{"id":16,"image":"assets/q16.jpg","alt":"Original notice or sign for question 16","options":["Anyone who has already finished all duties.","Anyone who still has duties to finish.","Anyone who has no weekend pass."],"correct":1},{"id":17,"image":"assets/q17.jpg","alt":"Original notice or sign for question 17","options":["Make sure nothing can fall out of your pockets.","Put any objects found on the apron in your pockets.","Leave hats and scarves unsecured."],"correct":0},{"id":18,"image":"assets/q18.jpg","alt":"Original notice or sign for question 18","options":["They will use a different runway for three days.","All flying will stop for three days.","The runway will be closed for one week."],"correct":0},{"id":19,"image":"assets/q19.jpg","alt":"Original notice or sign for question 19","options":["You must stay a safe distance from the intake.","Stand directly in front of the intake.","You may enter the marked area without ear defenders."],"correct":0},{"id":20,"image":"assets/q20.jpg","alt":"Original notice or sign for question 20","options":["They will fly as long as they arrive late.","Their flight will be moved to the following day automatically.","They will not be allowed to fly that day."],"correct":2},{"id":21,"image":"assets/q21.jpg","alt":"Original notice or sign for question 21","options":["The earthing cable must be disconnected before refuelling.","Connect the cable after the fuel line is removed.","The earthing cable must be connected."],"correct":2},{"id":22,"image":"assets/q22.jpg","alt":"Original notice or sign for question 22","options":["While the set is still transmitting.","Before switching off the main panel.","Only after the set has been switched off."],"correct":2},{"id":23,"image":"assets/q23.jpg","alt":"Original notice or sign for question 23","options":["After both crews have signed the log book.","Before either crew signs the log book.","As soon as the incoming crew arrives, without signing."],"correct":0},{"id":24,"image":"assets/q24.jpg","alt":"Original notice or sign for question 24","options":["Charge the batteries after the test.","Charge the batteries two weeks before the test.","Charge the batteries the day before the test."],"correct":2},{"id":25,"image":"assets/q25.jpg","alt":"Original notice or sign for question 25","options":["Carry your phone and camera inside.","Put your phone and camera in a locker.","Leave your phone with the guard and keep your camera."],"correct":1},{"id":26,"image":"assets/q26.jpg","alt":"Original notice or sign for question 26","options":["Go to the vehicle park as usual.","Wait at the parade square.","Go to a different place from usual."],"correct":2},{"id":27,"image":"assets/q27.jpg","alt":"Original notice or sign for question 27","options":["They cannot be taken out of the library.","They must be returned to the library before 1700.","They may be borrowed for two weeks."],"correct":0},{"id":28,"image":"assets/q28.jpg","alt":"Original notice or sign for question 28","options":["Use a personal memory stick on any computer in the room.","Share your password with another cadet.","Use your own memory stick."],"correct":2},{"id":29,"image":"assets/q29.jpg","alt":"Original notice or sign for question 29","options":["Apply after one month to take it again.","Apply within a week to take it again.","A missed exam can be retaken without applying."],"correct":1},{"id":30,"image":"assets/q30.jpg","alt":"Original notice or sign for question 30","options":["They must be returned before 1700 the following day.","They must be brought back the same day.","They may be kept overnight in the accommodation block."],"correct":1},{"id":31,"image":"assets/q31.jpg","alt":"Original notice or sign for question 31","options":["Your booth will be held for you all day.","Your booth may be given to another cadet.","You can book a booth after arriving without checking in."],"correct":1},{"id":32,"image":"assets/q32.jpg","alt":"Original notice or sign for question 32","options":["Until 2130.","Until 2200.","Until 2100."],"correct":2},{"id":33,"image":"assets/q33.jpg","alt":"Original notice or sign for question 33","options":["It must be booked through the camp canteen.","It books through the PT office a day or more in advance.","It can be booked at the sports hall on the same day."],"correct":1},{"id":34,"image":"assets/q34.jpg","alt":"Original notice or sign for question 34","options":["Ask an escort to identify them without documents.","Hand in something that shows who they are.","Submit a completed application form only."],"correct":1},{"id":35,"image":"assets/q35.jpg","alt":"Original notice or sign for question 35","options":["Cancel the appointment at least a week earlier.","Tell the clinic after the appointment time.","Let the clinic know a day earlier."],"correct":2},{"id":36,"image":"assets/q36.jpg","alt":"Original notice or sign for question 36","options":["You can change bank details by telephone.","You must come to the pay office yourself.","You can email the new details to the pay office."],"correct":1},{"id":37,"image":"assets/q37.jpg","alt":"Original notice or sign for question 37","options":["The crew chief.","Any member of the crew.","The duty electrician."],"correct":0},{"id":38,"image":"assets/q38.jpg","alt":"Original notice or sign for question 38","options":["Report it straight away.","Report it only if the tool is not found the next day.","Wait until the end of the shift to report it."],"correct":0},{"id":39,"image":"assets/q39.jpg","alt":"Original notice or sign for question 39","options":["Leave it where it was found without reporting it.","It should be labelled and handed in.","Repair it yourself and return it to the tool store."],"correct":1},{"id":40,"image":"assets/q40.jpg","alt":"Original notice or sign for question 40","options":["More than ten metres from the bay.","Within five metres of the bay.","Directly beside the bay entrance."],"correct":0},{"id":41,"image":"assets/q41.jpg","alt":"Original notice or sign for question 41","options":["Walk in front of the aircraft to stop it.","Let the aircraft go first.","Cross between the towing vehicle and the aircraft."],"correct":1},{"id":42,"image":"assets/q42.jpg","alt":"Original notice or sign for question 42","options":["Keep it in the signals room for later.","Destroy it in the shredder.","Put it in the waste bin."],"correct":1},{"id":43,"image":"assets/q43.jpg","alt":"Original notice or sign for question 43","options":["Across the footpath between Blocks 4 and 5.","Along the road behind Block 6.","Through the cable trench after dark."],"correct":1},{"id":44,"image":"assets/q44.jpg","alt":"Original notice or sign for question 44","options":["Once the red flag has been taken down.","While the red flag is still flying.","As soon as the warning sign is put up."],"correct":0},{"id":45,"image":"assets/q45.jpg","alt":"Original notice or sign for question 45","options":["When the siren sounds for the first time.","Ten minutes before the first siren.","When the siren sounds for the second time."],"correct":2},{"id":46,"image":"assets/q46.jpg","alt":"Original notice or sign for question 46","options":["They may only be used inside the camp.","They may be used outside without a red filter.","They may be used outside if a red filter is fitted."],"correct":2},{"id":47,"image":"assets/q47.jpg","alt":"Original notice or sign for question 47","options":["Anyone walking alone across the square.","Only officers crossing the square.","Cadets who are marching in a squad."],"correct":2},{"id":48,"image":"assets/q48.jpg","alt":"Original notice or sign for question 48","options":["They will be issued a weapon without a card.","They may collect weapons at any time of day.","Nothing will be issued to them."],"correct":2},{"id":49,"image":"assets/q49.jpg","alt":"Original notice or sign for question 49","options":["They take the swimming test on a weekday.","They attend extra lessons at the weekend.","They automatically pass the swimming test."],"correct":1},{"id":50,"image":"assets/q50.jpg","alt":"Original notice or sign for question 50","options":["Go to the nurse.","Go to the pay office.","Continue training and report it next week."],"correct":0},{"id":51,"image":"assets/q51.jpg","alt":"Original sign for question 51","options":["Write the checks in the log.","Take the vehicle out first and record any problems afterwards.","Ask another cadet to check the vehicle instead."],"correct":0}];
+const PARTS = [{start:1,end:10},{start:11,end:20},{start:21,end:30},{start:31,end:40},{start:41,end:51}];
+const LETTERS=['A','B','C'];
+const STORAGE_KEY='reading_51_v1_offline';
+const get=(id)=>document.getElementById(id);
+const storageRead=()=>{try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch{return {}}};
+const stored=storageRead();
+const data=stored&&typeof stored==='object'?stored:{};
+let part = Number.isInteger(data.part)&&data.part>=0&&data.part<5?data.part:0;
+let selections = data.selections&&typeof data.selections==='object'?data.selections:{};
+let submitted = data.submitted&&typeof data.submitted==='object'?data.submitted:{};
+let orders={};
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({part,selections,submitted}))}catch{}}
+function shuffled(n){const a=Array.from({length:n},(_,i)=>i);for(let i=n-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function optionsOrder(q){return orders[q.id] || (orders[q.id]=shuffled(q.options.length))}
+function range(){return PARTS[part]}
+function segment(){const r=range();return QUESTIONS.slice(r.start-1,r.end)}
+function count(partIndex){const r=PARTS[partIndex];return QUESTIONS.slice(r.start-1,r.end).filter(q=>Number.isInteger(selections[q.id])&&selections[q.id]>=0&&selections[q.id]<3).length}
+function score(partIndex){const r=PARTS[partIndex];return QUESTIONS.slice(r.start-1,r.end).filter(q=>selections[q.id]===q.correct).length}
+function el(tag,cls,content){const e=document.createElement(tag);if(cls)e.className=cls;if(content!==undefined)e.textContent=content;return e}
+function renderNav(){const nav=get('part-nav');nav.replaceChildren();PARTS.forEach((r,i)=>{
+ const button=el('button','partbtn'+(i===part?' active':''));button.type='button';button.setAttribute('aria-current',i===part?'page':'false');
+ const left=el('div');left.append(el('span','parttitle',`Phần ${i+1}`),el('span','partrange',`Câu ${r.start}–${r.end}`));
+ const countN=count(i),total=r.end-r.start+1;const status=el('span','mini',submitted[i]?`${score(i)}/${total} ✓`:`${countN}/${total}`);
+ button.append(left,status);button.addEventListener('click',()=>selectPart(i));nav.append(button)})}
+function renderTotals(){const done=QUESTIONS.filter(q=>Number.isInteger(selections[q.id])&&selections[q.id]>=0&&selections[q.id]<3).length;get('overall-text').textContent=`${done}/51`;get('overall-progress').style.width=`${done/51*100}%`;
+ const r=range();const current=count(part);const total=r.end-r.start+1;get('live-count').textContent=`Đã làm ${current}/${total} câu`;get('part-progress').style.width=`${current/total*100}%`;renderNav()}
+function createCard(q){const graded=Boolean(submitted[part]);const chosen=selections[q.id];
+ const card=el('article','question');card.id=`q${q.id}`;
+ const head=el('div','qhead');head.append(el('div','qname',`Câu ${q.id}`),el('span','qstatus',graded?(chosen===q.correct?'✓ Đúng':chosen===undefined?'Chưa trả lời':'✕ Chưa đúng'):(chosen===undefined?'Chưa làm':'Đã chọn')));card.append(head);
+ const body=el('div','qinner');const fig=el('figure','picture');const photoButton=el('button','picbtn');photoButton.type='button';photoButton.setAttribute('aria-label',`Phóng to ảnh câu ${q.id}`);
+ const img=el('img');img.src=q.image;img.alt=q.alt;img.loading='lazy';photoButton.append(img);photoButton.addEventListener('click',()=>openPhoto(q));fig.append(photoButton,el('figcaption','', 'Nhấn vào ảnh để phóng to'));
+ const right=el('div');right.append(el('p','qprompt','Chọn nội dung đúng với thông báo trong ảnh:'));
+ const choiceList=el('div','options');optionsOrder(q).forEach((origIndex,pos)=>{
+  const picked=chosen===origIndex;
+  const option=el('label','option'+(picked?' selected':'')+(graded?' locked':'')+(graded&&origIndex===q.correct?' right':'')+(graded&&picked&&origIndex!==q.correct?' wrong':''));
+  const input=el('input');input.type='radio';input.name=`q${q.id}`;input.value=String(origIndex);input.checked=picked;input.disabled=graded;input.setAttribute('aria-label',`Đáp án ${LETTERS[pos]}: ${q.options[origIndex]}`);
+  input.addEventListener('change',()=>{selections[q.id]=origIndex;save();renderCardOnly(q.id);renderTotals()});
+  option.append(input,el('span','letter',LETTERS[pos]),el('span','opttext',q.options[origIndex]));choiceList.append(option)
+ });right.append(choiceList);
+ if(graded){const note=el('div','feedback '+(chosen===q.correct?'ok':'bad'),chosen===q.correct?'✓ Chính xác':chosen===undefined?'Chưa chọn đáp án — xem phương án màu xanh.':'Chưa đúng — phương án màu xanh là đáp án trong file gốc.');right.append(note)}
+ body.append(fig,right);card.append(body);return card
+}
+function renderCardOnly(qid){const q=QUESTIONS[qid-1];get(`q${qid}`)?.replaceWith(createCard(q))}
+function render(){const r=range();get('section-title').textContent=`Phần ${part+1} • Câu ${r.start}–${r.end}`;
+ get('section-intro').textContent=`${r.end-r.start+1} câu hỏi • Giữ nguyên thứ tự câu, chỉ xáo trộn các lựa chọn A/B/C.`;
+ const list=get('questions');list.replaceChildren(...segment().map(createCard));
+ const graded=Boolean(submitted[part]);get('grade').disabled=graded;get('grade').textContent=graded?'Đã chấm điểm':'Chấm điểm phần này';
+ const summary=get('result');summary.classList.toggle('visible',graded);
+ if(graded){const total=r.end-r.start+1;summary.replaceChildren(el('b','',`Kết quả: ${score(part)}/${total} câu đúng`),el('p','',`Đã trả lời ${count(part)}/${total} câu. Đáp án xanh là đáp án đã được đánh dấu trong file gốc. Nếu muốn luyện lại, bấm “Làm lại”.`))}
+ else summary.replaceChildren();get('next').textContent=part===4?'↻ Quay về phần 1':'Phần tiếp theo →';renderTotals();save()
+}
+function selectPart(p){part=p;render();window.scrollTo({top:0,behavior:'smooth'})}
+get('grade').addEventListener('click',()=>{if(submitted[part])return;submitted[part]=true;render();get('result').scrollIntoView({behavior:'smooth',block:'center'})});
+get('reset').addEventListener('click',()=>{const r=range();for(let id=r.start;id<=r.end;id++){delete selections[id];orders[id]=shuffled(3)}delete submitted[part];render();get('main').scrollIntoView({behavior:'smooth',block:'start'})});
+get('next').addEventListener('click',()=>selectPart((part+1)%5));
+function openPhoto(q){get('lightbox-name').textContent=`Ảnh đề câu ${q.id}`;get('lightbox-photo').src=q.image;get('lightbox-photo').alt=q.alt;get('lightbox').showModal()}
+get('close-photo').addEventListener('click',()=>get('lightbox').close());get('lightbox').addEventListener('click',event=>{if(event.target===get('lightbox'))get('lightbox').close()});
+render();
+</script>
+</body>
+</html>
